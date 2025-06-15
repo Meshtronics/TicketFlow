@@ -1,17 +1,27 @@
 #!/usr/bin/env python3
 """
-Create a new ticket Markdown file in tickets/open/ with a date‑based ID,
-open it in $EDITOR, and rebuild TICKETS_INDEX.md.
+Create a new ticket Markdown file in tickets/open/ with a date‑based ID.
+
+Usage examples
+--------------
+python scripts/new_ticket.py "Implement profile engine"
+python scripts/new_ticket.py # will prompt for title
+python scripts/new_ticket.py "Title" --no-edit
 """
 from __future__ import annotations
 
+import argparse
+import platform
 import os
+import shutil
 import subprocess
+import sys
 from datetime import date
 from pathlib import Path
 from textwrap import dedent
 
-TICKETS_DIR = Path(__file__).resolve().parent.parent / "tickets" / "open"
+ROOT = Path(__file__).resolve().parent.parent
+TICKETS_DIR = ROOT / "tickets" / "open"
 INDEX_SCRIPT = Path(__file__).with_name("build_index.py")
 
 
@@ -26,22 +36,58 @@ def slugify(text: str) -> str:
 def next_ticket_id(today: date) -> str:
     prefix = today.strftime("%Y-%m-%d")
     existing = {
-        p.stem.split("_")[0]  # 2025-06-18-003
-        for p in TICKETS_DIR.glob(f"{prefix}-*.md")
+        p.stem.split("_")[0] for p in TICKETS_DIR.glob(f"{prefix}-*.md")
     }
-    next_num = 1
-    while f"{prefix}-{next_num:03d}" in existing:
-        next_num += 1
-    return f"{prefix}-{next_num:03d}"
+    n = 1
+    while f"{prefix}-{n:03d}" in existing:
+        n += 1
+    return f"{prefix}-{n:03d}"
+
+
+def pick_editor() -> list[str] | None:
+    """
+    Return a command list for subprocess.run or None.
+    Order of preference:
+      • $EDITOR     (if set and on PATH)
+      • VS Code     ('code -r')
+      • Notepad++   ('notepad++.exe')  if installed
+      • Windows     ('notepad.exe')
+      • *nix        ('nano')
+    """
+    env = os.getenv("EDITOR")
+    if env and shutil.which(env.split()[0]):
+        return env.split()
+
+    if shutil.which("code"):
+        return ["code", "-r"]
+
+    if shutil.which("notepad++.exe"):
+        return ["notepad++.exe"]
+
+    if os.name == "nt" and shutil.which("notepad.exe"):
+        return ["notepad.exe"]
+
+    if shutil.which("nano"):
+        return ["nano"]
+
+    return None
 
 
 def main() -> None:
-    TICKETS_DIR.mkdir(parents=True, exist_ok=True)
-    title = input("Short ticket title: ").strip()
-    if not title:
-        print("Aborted – empty title.")
-        return
+    parser = argparse.ArgumentParser(description="Create a new ticket.")
+    parser.add_argument("title", nargs="?", help="Short ticket title")
+    parser.add_argument(
+        "--no-edit",
+        action="store_true",
+        help="Skip opening the ticket in an editor",
+    )
+    args = parser.parse_args()
 
+    title = args.title or input("Short ticket title: ").strip()
+    if not title:
+        sys.exit("Aborted – empty title.")
+
+    TICKETS_DIR.mkdir(parents=True, exist_ok=True)
     ticket_id = next_ticket_id(date.today())
     filename = f"{ticket_id}_{slugify(title)}.md"
     path = TICKETS_DIR / filename
@@ -71,15 +117,26 @@ def main() -> None:
         _Assignee: unassigned_
         """
     )
-    path.write_text(template, encoding="utf‑8")
-    print(f"Created {path.relative_to(Path.cwd())}")
+    path.write_text(template, encoding="utf-8")
+    print(f"✅  Created {path.relative_to(ROOT)}")
 
-    # open in editor
-    editor = os.getenv("EDITOR", "nano")
-    subprocess.run([editor, str(path)])
+    if not args.no_edit:
+        cmd = pick_editor()
+        if cmd:
+            try:
+                subprocess.run([*cmd, str(path)], check=False)
+            except FileNotFoundError:
+                print("⚠️  Editor command failed; fallback to default opener.")
+                cmd = None
+
+        if cmd is None:
+            if os.name == "nt":
+                os.startfile(str(path))  # type: ignore[attr-defined]
+            else:
+                webbrowser.open(f"file://{path}")
 
     # rebuild index
-    subprocess.run(["python", str(INDEX_SCRIPT)], check=True)
+    subprocess.run([sys.executable, str(INDEX_SCRIPT)], check=True)
 
 
 if __name__ == "__main__":
