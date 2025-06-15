@@ -139,7 +139,7 @@ docs/
 📄 License
 ----------
 
-Released under the MIT License---do whatever you like, but please preserve the copyright headers.
+Released under the GNU Affero v3.0 License - please review before using for commercial work.
 
 * * * * *
 
