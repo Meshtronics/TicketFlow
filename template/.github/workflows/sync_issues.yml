@@ -1,0 +1,14 @@
+name: Sync GitHub Issues ↔ tickets/
+on:
+  issues:
+    types: [opened, edited, reopened, closed]
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Mirror issue => ticket
+        uses: meshtronics/ticketflow@v1   # ← the reusable action
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
