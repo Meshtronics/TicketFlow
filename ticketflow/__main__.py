@@ -13,7 +13,14 @@ from ticketflow.core import create_ticket
 def _launch_streamlit() -> None:
     # Replace current process with `streamlit run -m ticketflow.ui.main`
     cmd = ["streamlit", "run", "-m", "ticketflow.ui.main"]
-    os.execvp(cmd[0], cmd)   # never returns
+    try:
+        os.execvp(cmd[0], cmd)   # never returns
+    except FileNotFoundError:
+        raise FileNotFoundError(
+            "Error: The 'streamlit' command was not found. "
+            "Please ensure Streamlit is installed and that its installation directory is in your system's PATH. "
+            "You can typically install it using: pip install streamlit"
+        )
 
 def main() -> None:
     p = argparse.ArgumentParser(prog="ticketflow")
