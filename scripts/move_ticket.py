@@ -6,12 +6,15 @@ Optional: close the matching GitHub Issue if `gh` CLI is available.
 from __future__ import annotations
 
 import argparse
+import logging
 import re
 import shutil
 import subprocess
 import sys
 from pathlib import Path
 from typing import Final
+
+logger = logging.getLogger(__name__)
 
 ROOT: Final = Path(__file__).resolve().parent.parent
 OPEN_DIR: Final = ROOT / "tickets" / "open"
@@ -23,7 +26,7 @@ TICKET_RE = re.compile(r"^\d{4}-\d{2}-\d{2}-\d{3}$")
 def try_close_issue(ticket_id: str) -> None:
     """Close GitHub Issue that contains the ticket ID in title (best‑effort)."""
     if shutil.which("gh") is None:
-        print("ℹ️  GitHub CLI not found; skipping Issue close.")
+        logger.info("ℹ️  GitHub CLI not found; skipping Issue close.")
         return
 
     try:
@@ -33,9 +36,9 @@ def try_close_issue(ticket_id: str) -> None:
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
         )
-        print(f"✅  Closed GitHub Issue containing “{ticket_id}”")
+        logger.info("✅  Closed GitHub Issue containing “%s”", ticket_id)
     except subprocess.CalledProcessError:
-        print("⚠️  Could not find or close matching GitHub Issue.")
+        logger.warning("⚠️  Could not find or close matching GitHub Issue.")
 
 
 def main() -> None:
@@ -61,7 +64,7 @@ def main() -> None:
     ARCH_DIR.mkdir(parents=True, exist_ok=True)
     dest = ARCH_DIR / src.name
     src.rename(dest)
-    print(f"📦  Moved {src.name} → tickets/archive/")
+    logger.info("📦  Moved %s → tickets/archive/", src.name)
 
     if args.close_issue:
         try_close_issue(args.ticket_id)
