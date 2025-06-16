@@ -14,7 +14,7 @@ via “Use this template” on GitHub.
 
 -   No proprietary formats
 
--   One **`/tickets`** folder in your repo = the single source of truth
+-   One **`/ticketflow`** folder in your repo = the single source of truth
 
 * * * * *
 
