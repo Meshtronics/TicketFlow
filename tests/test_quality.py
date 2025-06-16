@@ -3,7 +3,7 @@ import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from ticketflow.package.quality import score_ticket
+from ticketflow.quality import score_ticket
 
 
 def test_perfect_ticket() -> None:
