@@ -1,7 +1,8 @@
 import streamlit as st
 from pathlib import Path
 from ticketflow.config import cfg
-from ticketflow.core import parse_md_ticket, create_ticket
+from ticketflow.core import create_ticket, parse_md_ticket
+from ticketflow.quality import score_ticket
 
 
 def launch_ui() -> None:
@@ -30,6 +31,18 @@ def launch_ui() -> None:
     # --- main table ---------------------------------------------------------
     st.subheader(f"Open tickets ({len(files)})")
     rows = [
-        {"ID": parse_md_ticket(md)[0], "Title": parse_md_ticket(md)[1]} for md in files
+        {
+            "ID": parse_md_ticket(md)[0],
+            "Title": parse_md_ticket(md)[1],
+            "Score": score_ticket(md)["total"],
+        }
+        for md in files
     ]
     st.dataframe(rows, hide_index=True)
+
+    for md in files:
+        ticket_id, title = parse_md_ticket(md)
+        result = score_ticket(md)
+        with st.expander(f"{ticket_id} — {title}"):
+            st.progress(result["total"])  # progress bar uses 0-100
+            st.json(result["sections"])

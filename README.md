@@ -126,8 +126,23 @@ ticketflow/
 | `python ticketflow/scripts/new_ticket.py "Title"` | Generates a new ticket with date/ID slug, opens in `$EDITOR`, updates index |
 | `python ticketflow/scripts/move_ticket.py TICKET_ID [--close-issue]` | Moves ticket to `archive/` and (optionally) closes linked Issue |
 | `python ticketflow/scripts/build_index.py` | Rewrites **`TICKETS_INDEX.md`** (run in CI or pre‑commit) |
+| `python ticketflow/scripts/score_ticket.py PATH` | Prints a 0‑100 quality score for the ticket |
 
 *All scripts are pure Python 3.10+, no external deps except `jinja2`.*
+
+### Ticket quality scoring
+
+Use the `score_ticket.py` helper or `ticketflow score` to evaluate a ticket. The
+score ranges from 0–100 based on section completeness.
+
+| Section | Weight |
+|---------|-------:|
+| Metadata | 10 |
+| Background | 15 |
+| Requirements | 25 |
+| Implementation | 25 |
+| Related Files | 15 |
+| Clarity & Formatting | 10 |
 
 * * * * *
 

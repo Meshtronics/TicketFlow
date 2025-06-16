@@ -8,9 +8,15 @@ ticketflow new "Title"   # create ticket from CLI
 """
 
 from __future__ import annotations
-import os
 import argparse
+import json
+import os
+import sys
+
+from pathlib import Path
+
 from ticketflow.core import create_ticket
+from ticketflow.quality import score_ticket
 
 
 def _launch_streamlit() -> None:
@@ -37,6 +43,12 @@ def main() -> None:
     new.add_argument("--no-edit", action="store_true")
     new.add_argument("--github", action="store_true", help="Force create GitHub Issue")
 
+    score = sub.add_parser("score", help="Score a ticket")
+    score.add_argument("path", help="Path to ticket markdown")
+    score.add_argument(
+        "--threshold", type=int, default=60, help="Fail below this score"
+    )
+
     args = p.parse_args()
 
     if args.cmd == "ui" or args.cmd is None:  # default = ui
@@ -47,6 +59,11 @@ def main() -> None:
             open_in_editor=not args.no_edit,
             github_issue=args.github or None,
         )
+    elif args.cmd == "score":
+        result = score_ticket(Path(args.path))
+        print(json.dumps(result, indent=2))
+        if result["total"] < args.threshold:
+            sys.exit(1)
     else:
         p.print_help()
 
