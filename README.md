@@ -24,13 +24,13 @@ via “Use this template” on GitHub.
 | Capability | How it works |
 | --- | --- |
 | **Open / archive ticket folders** | Markdown files in `tickets/open/` and `tickets/archive/` |
-| **Ticket helper scripts** | `scripts/new_ticket.py`, `move_ticket.py`, `build_index.py` |
+| **Ticket helper scripts** | `ticketflow/scripts/new_ticket.py`, `move_ticket.py`, `build_index.py` |
 | **Streamlit dashboard (stub)** | `ticketflow gui` → browse tickets in a browser |
 | **Issue ↔ ticket mirroring** (opt‑in) | Re‑usable GitHub Action (`meshtronics/ticketflow@v1`) |
 | **Repo instructions for AI** | `.github/copilot-instructions.md` (editable) |
 | **Template‑repo flag** | Click **Use this template** to bootstrap future projects |
 
-Everything under **`template/`** is copied into each new project that adopts TicketFlow. The rest (Streamlit UI, Action source) lives here so you can update and tag new releases centrally.
+Everything under **`ticketflow/`** is copied into each new project that adopts TicketFlow. The rest (Streamlit UI, Action source) lives here so you can update and tag new releases centrally.
 
 * * * * *
 
@@ -61,7 +61,7 @@ TICKETS_INDEX.md
 
 ### 2  Create your first real ticket
 
-```python scripts/new_ticket.py "Implement profile engine"
+```python ticketflow/scripts/new_ticket.py "Implement profile engine"
 # Answer prompts; an .md file appears in tickets/open/
 git add tickets TICKETS_INDEX.md
 git commit -m "docs: add ticket 2025‑06‑18‑001"
@@ -88,7 +88,7 @@ Edit `.github/workflows/sync_issues.yml` in your project; keep or delete as you 
 --------------
 
 ```
-template/
+ticketflow/
 (ticketflow template repo root)
 ├─ .ticketflow.yml              ← default config copied downstream
 ├─ tickets/                     ← example open/archive folders
@@ -121,9 +121,9 @@ template/
 
 | Command | What it does |
 | --- | --- |
-| `python scripts/new_ticket.py "Title"` | Generates a new ticket with date/ID slug, opens in `$EDITOR`, updates index |
-| `python scripts/move_ticket.py TICKET_ID [--close-issue]` | Moves ticket to `archive/` and (optionally) closes linked Issue |
-| `python scripts/build_index.py` | Rewrites **`TICKETS_INDEX.md`** (run in CI or pre‑commit) |
+| `python ticketflow/scripts/new_ticket.py "Title"` | Generates a new ticket with date/ID slug, opens in `$EDITOR`, updates index |
+| `python ticketflow/scripts/move_ticket.py TICKET_ID [--close-issue]` | Moves ticket to `archive/` and (optionally) closes linked Issue |
+| `python ticketflow/scripts/build_index.py` | Rewrites **`TICKETS_INDEX.md`** (run in CI or pre‑commit) |
 
 *All scripts are pure Python 3.10+, no external deps except `jinja2`.*
 

@@ -6,11 +6,13 @@ Optional: close the matching GitHub Issue if `gh` CLI is available.
 from __future__ import annotations
 
 import argparse
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import re
 import shutil
 import subprocess
-import sys
-from pathlib import Path
 from typing import Final
 
 ROOT: Final = Path(__file__).resolve().parent.parent

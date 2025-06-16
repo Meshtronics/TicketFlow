@@ -1,14 +1,15 @@
 import streamlit as st
 from pathlib import Path
 from ticketflow.config import cfg
-from ticketflow.core import parse_md_ticket, create_ticket
+from ticketflow.core import ROOT, parse_md_ticket, create_ticket
+
 
 def launch_ui() -> None:
     st.set_page_config(page_title="TicketFlow", layout="wide")
     st.title("📋 TicketFlow")
 
     ticket_dir_value = cfg("defaults", "ticket_dir", default="tickets")
-    ticket_dir = Path(str(ticket_dir_value)) / "open"
+    ticket_dir = ROOT / Path(str(ticket_dir_value)) / "open"
     files = sorted(ticket_dir.glob("*.md"))
 
     # --- sidebar: create ticket --------------------------------------------
@@ -29,7 +30,6 @@ def launch_ui() -> None:
     # --- main table ---------------------------------------------------------
     st.subheader(f"Open tickets ({len(files)})")
     rows = [
-        {"ID": parse_md_ticket(md)[0], "Title": parse_md_ticket(md)[1]}
-        for md in files
+        {"ID": parse_md_ticket(md)[0], "Title": parse_md_ticket(md)[1]} for md in files
     ]
     st.dataframe(rows, hide_index=True)

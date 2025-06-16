@@ -5,18 +5,18 @@ Regenerate TICKETS_INDEX.md — a markdown table of all open tickets.
 from __future__ import annotations
 
 import re
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from ticketflow.core import parse_md_ticket
 
 ROOT = Path(__file__).resolve().parent.parent
 OPEN_DIR = ROOT / "tickets" / "open"
 INDEX_FILE = ROOT / "TICKETS_INDEX.md"
 
-HEADER = (
-    "| Ticket ID | Title | Status |\n"
-    "|-----------|-------|--------|\n"
-)
+HEADER = "| Ticket ID | Title | Status |\n" "|-----------|-------|--------|\n"
 
 # Regex tolerates normal hyphen or em‑dash and any amount of whitespace
 HEADING_RE = re.compile(
@@ -49,9 +49,7 @@ def main() -> None:
     timestamp = datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds")
 
     INDEX_FILE.write_text(
-        f"<!-- auto‑generated {timestamp} -->\n"
-        + body
-        + "\n",
+        f"<!-- auto‑generated {timestamp} -->\n" + body + "\n",
         encoding="utf-8",
     )
     print(f"Rebuilt {INDEX_FILE.relative_to(ROOT)} ({len(rows)} tickets)")
