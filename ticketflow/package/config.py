@@ -5,11 +5,13 @@ from typing import Any
 from functools import lru_cache
 from ruamel.yaml import YAML
 
+ROOT = Path(__file__).resolve().parent.parent
+
 
 @lru_cache(maxsize=1)
 def get_config() -> dict[str, Any]:
     yaml = YAML(typ="safe")
-    path = Path.cwd() / ".ticketflow.yml"
+    path = ROOT / ".ticketflow.yml"
     if path.exists():
         return yaml.load(path) or {}
     return {}

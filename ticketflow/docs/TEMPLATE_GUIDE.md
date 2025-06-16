@@ -8,25 +8,27 @@ This short guide mirrors the main README but focuses only on the steps needed to
 2. Clone your new repository.
 3. You will see the following structure:
    ```
-   tickets/
-     ├─ open/
-     │   └─ 0000-00-00-000_example.md
-     └─ archive/
-   scripts/
+   ticketflow/
+     ├─ tickets/
+     │   ├─ open/
+     │   │   └─ 0000-00-00-000_example.md
+     │   └─ archive/
+     ├─ scripts/
+     └─ .ticketflow.yml
    .github/
    TICKETS_INDEX.md
    ```
 
 ## 2. Create and manage tickets
 
-* Run `python scripts/new_ticket.py "Title"` to generate a ticket. The script writes the Markdown file and updates `TICKETS_INDEX.md`.
+* Run `python ticketflow/scripts/new_ticket.py "Title"` to generate a ticket. The script writes the Markdown file and updates `TICKETS_INDEX.md`.
 * Commit the changes and push.
 * When a ticket is finished, move it to the archive:
   ```
-  python scripts/move_ticket.py TICKET_ID [--close-issue]
+  python ticketflow/scripts/move_ticket.py TICKET_ID [--close-issue]
   ```
-  This moves the file to `tickets/archive/` and optionally closes a linked GitHub Issue.
-* Regenerate the index at any time with `python scripts/build_index.py`.
+  This moves the file to `ticketflow/tickets/archive/` and optionally closes a linked GitHub Issue.
+* Regenerate the index at any time with `python ticketflow/scripts/build_index.py`.
 
 ## 3. Optional extras
 

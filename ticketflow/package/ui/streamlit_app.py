@@ -1,7 +1,10 @@
 import streamlit as st
 from pathlib import Path
 
-TICKETS_DIR = Path.cwd() / "tickets" / "open"
+from ticketflow.config import cfg
+
+ticket_dir_value = cfg("defaults", "ticket_dir", default="tickets")
+TICKETS_DIR = Path(str(ticket_dir_value)) / "open"
 
 st.set_page_config(page_title="TicketFlow", layout="wide")
 st.title("📋 TicketFlow Dashboard (MVP stub)")
