@@ -6,6 +6,7 @@
 * **Type hints:** Mandatory for all new functions and public methods (`from __future__ import annotations`).
 * **Imports:** Standard library ⟶ third‑party ⟶ local, separated by a blank line.  No wildcard imports.
 * **Logging:** Use the shared `import logging; logger = logging.getLogger(__name__)` pattern instead of bare `print`.
+* **Change scope:** When tasked with a change, prefer to create a new function or class instead of modifying existing ones.  If you must modify, ensure the change is minimal and well‑documented.
 
 ## Testing
 * Use **pytest**; name files `test_*.py`.
