@@ -4,16 +4,19 @@ from __future__ import annotations
 import re
 import os
 import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from ticketflow.config import cfg
+
 import shutil
 import subprocess
 import webbrowser
 import logging
 from datetime import date
-from pathlib import Path
 from textwrap import dedent
 from typing import Tuple
-
-from ticketflow.config import cfg
 
 logger = logging.getLogger(__name__)
 

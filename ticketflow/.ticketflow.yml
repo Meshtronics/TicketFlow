@@ -2,7 +2,7 @@
 
 defaults:
   editor_cmd: "code -r"            # fallback if $EDITOR is unset
-  ticket_dir: "tickets"            # relocate later if you want
+  ticket_dir: "ticketflow\tickets"            # relocate later if you want
   id_prefix: ""                    # e.g. "PF-" would yield PF‑2025‑...
   auto_create_github_issue: false  # new_ticket.py & UI obey this
   auto_close_github_issue: false   # move_ticket.py & UI obey this

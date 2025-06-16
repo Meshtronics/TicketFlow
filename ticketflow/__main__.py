@@ -10,7 +10,7 @@ ticketflow new "Title"   # create ticket from CLI
 from __future__ import annotations
 import os
 import argparse
-from ticketflow.core import create_ticket
+from core import create_ticket
 
 
 def _launch_streamlit() -> None:
