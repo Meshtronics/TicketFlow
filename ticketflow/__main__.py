@@ -15,7 +15,7 @@ import sys
 
 from pathlib import Path
 
-from core import create_ticket
+from ticketflow.core import create_ticket
 from ticketflow.quality import score_ticket
 
 

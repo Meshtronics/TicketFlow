@@ -25,7 +25,7 @@ via “Use this template” on GitHub.
 | --- | --- |
 | **Open / archive ticket folders** | Markdown files in `ticketflow/tickets/open/` and `ticketflow/tickets/archive/` |
 | **Ticket helper scripts** | `ticketflow/scripts/new_ticket.py`, `move_ticket.py`, `build_index.py` |
-| **Streamlit dashboard (stub)** | `ticketflow gui` → browse tickets in a browser |
+| **Streamlit dashboard** | `ticketflow gui` → full CRUD UI in a browser |
 | **Issue ↔ ticket mirroring** (opt‑in) | Re‑usable GitHub Action (`meshtronics/ticketflow@v1`) |
 | **Repo instructions for AI** | `.github/copilot-instructions.md` (editable) |
 | **Template‑repo flag** | Click **Use this template** to bootstrap future projects |
@@ -149,7 +149,7 @@ score ranges from 0–100 based on section completeness.
 🛠️ Extending TicketFlow
 ------------------------
 
--   **Streamlit CRUD** -- flesh out `ticketflow/ui/streamlit_app.py` into a full editor with Pydantic validation and Issue API calls.
+-   **Streamlit CRUD** -- the Streamlit app now lets you create, edit and archive tickets. Future updates may add validation and GitHub automation.
 
 -   **Custom ticket schema** -- adjust the Markdown scaffold or enforce additional metadata with YAML front‑matter if you like.
 
