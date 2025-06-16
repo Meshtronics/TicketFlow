@@ -14,11 +14,14 @@ import sys
 from pathlib import Path
 from typing import Final
 
+from ticketflow.config import cfg
+
 logger = logging.getLogger(__name__)
 
 ROOT: Final = Path(__file__).resolve().parent.parent
-OPEN_DIR: Final = ROOT / "tickets" / "open"
-ARCH_DIR: Final = ROOT / "tickets" / "archive"
+ticket_dir = str(cfg("defaults", "ticket_dir", default="tickets"))
+OPEN_DIR: Final = ROOT / ticket_dir / "open"
+ARCH_DIR: Final = ROOT / ticket_dir / "archive"
 INDEX_SCRIPT: Final = Path(__file__).with_name("build_index.py")
 TICKET_RE = re.compile(r"^\d{4}-\d{2}-\d{2}-\d{3}$")
 

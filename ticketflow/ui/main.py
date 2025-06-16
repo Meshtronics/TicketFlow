@@ -13,6 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.append(str(Path(__file__).resolve().parent.parent.parent))
 
 from ticketflow.config import cfg
+from ticketflow.quality import score_ticket
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +38,10 @@ def main() -> None:
         return
 
     for ticket_file in files:
-        with st.expander(ticket_file.name, expanded=False):
+        quality_result = score_ticket(ticket_file)
+        quality_score = quality_result.get("total", 0)
+        header = f"{ticket_file.name} — Quality: {quality_score:.1f}%"
+        with st.expander(header, expanded=False):
             st.markdown(ticket_file.read_text(encoding="utf-8"))
 
 if __name__ == "__main__":

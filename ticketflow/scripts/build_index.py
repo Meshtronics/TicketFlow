@@ -9,12 +9,14 @@ import logging
 from datetime import datetime, timezone
 from pathlib import Path
 from ticketflow.core import parse_md_ticket
+from ticketflow.config import cfg
 
 logger = logging.getLogger(__name__)
 
 ROOT = Path(__file__).resolve().parent.parent
-OPEN_DIR = ROOT / "tickets" / "open"
-INDEX_FILE = ROOT / "TICKETS_INDEX.md"
+ticket_dir = str(cfg("defaults", "ticket_dir", default="tickets"))
+OPEN_DIR = ROOT / ticket_dir / "open"
+INDEX_FILE = ROOT / ticket_dir / "TICKETS_INDEX.md"
 
 HEADER = "| Ticket ID | Title | Status |\n" "|-----------|-------|--------|\n"
 
