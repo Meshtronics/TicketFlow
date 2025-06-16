@@ -3,7 +3,15 @@ from pathlib import Path
 from typing import Any
 
 from functools import lru_cache
-from ruamel.yaml import YAML
+try:
+    from ruamel.yaml import YAML  # type: ignore
+except Exception:  # pragma: no cover - optional dependency
+    class YAML:
+        def __init__(self, *a, **kw) -> None:
+            pass
+
+        def load(self, f):
+            return {}
 
 ROOT = Path(__file__).resolve().parent.parent
 

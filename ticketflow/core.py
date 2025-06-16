@@ -44,6 +44,7 @@ ticket_dir = cfg("defaults", "ticket_dir", default="tickets")
 if not isinstance(ticket_dir, str):
     ticket_dir = "tickets"
 OPEN_DIR = ROOT / ticket_dir / "open"
+ARCH_DIR = ROOT / ticket_dir / "archive"
 INDEX_SCRIPT = ROOT / "scripts" / "build_index.py"
 
 
@@ -142,3 +143,40 @@ def create_ticket(
 
     subprocess.run([sys.executable, str(INDEX_SCRIPT)], check=False)
     return path
+
+
+def list_tickets(status: str = "open") -> list[dict[str, str]]:
+    """Return list of ticket metadata dictionaries for the given status."""
+    base = OPEN_DIR if status == "open" else ARCH_DIR
+    tickets = []
+    for md in sorted(base.glob("*.md")):
+        ticket_id, title = parse_md_ticket(md)
+        tickets.append({"id": ticket_id, "title": title, "path": str(md)})
+    return tickets
+
+
+def edit_ticket(ticket_id: str, new_text: str) -> Path:
+    """Overwrite ticket markdown identified by `ticket_id`."""
+    for d in (OPEN_DIR, ARCH_DIR):
+        match = list(d.glob(f"{ticket_id}_*.md"))
+        if match:
+            path = match[0]
+            path.write_text(new_text, encoding="utf-8")
+            subprocess.run([sys.executable, str(INDEX_SCRIPT)], check=False)
+            return path
+    raise FileNotFoundError(ticket_id)
+
+
+def move_ticket(ticket_id: str, *, archive: bool = True, close_issue: bool = False) -> Path:
+    """Move a ticket between open and archive folders."""
+    src_dir, dest_dir = (OPEN_DIR, ARCH_DIR) if archive else (ARCH_DIR, OPEN_DIR)
+    matches = list(src_dir.glob(f"{ticket_id}_*.md"))
+    if not matches:
+        raise FileNotFoundError(ticket_id)
+    dest_dir.mkdir(parents=True, exist_ok=True)
+    dest = dest_dir / matches[0].name
+    matches[0].rename(dest)
+    if close_issue:
+        logger.info("Issue sync not implemented; skipping close/reopen")
+    subprocess.run([sys.executable, str(INDEX_SCRIPT)], check=False)
+    return dest
