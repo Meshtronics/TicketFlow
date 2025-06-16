@@ -7,7 +7,11 @@ from __future__ import annotations
 import re
 import logging
 from datetime import datetime, timezone
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 from ticketflow.core import parse_md_ticket
 from ticketflow.config import cfg
 

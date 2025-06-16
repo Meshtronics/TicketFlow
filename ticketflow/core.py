@@ -9,6 +9,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from ticketflow.config import cfg
+from ticketflow.quality import score_ticket
 
 import shutil
 import subprocess
@@ -149,9 +150,12 @@ def list_tickets(status: str = "open") -> list[dict[str, str]]:
     """Return list of ticket metadata dictionaries for the given status."""
     base = OPEN_DIR if status == "open" else ARCH_DIR
     tickets = []
+    logger.info("Looking for tickets in: %s", base)
+    logger.info("Found tickets: %s", [str(md) for md in base.glob("*.md")])
     for md in sorted(base.glob("*.md")):
         ticket_id, title = parse_md_ticket(md)
-        tickets.append({"id": ticket_id, "title": title, "path": str(md)})
+        score = score_ticket(md)["total"]
+        tickets.append({"id": ticket_id, "title": title, "path": str(md), "score": score})
     return tickets
 
 

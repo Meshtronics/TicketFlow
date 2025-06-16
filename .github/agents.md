@@ -4,7 +4,7 @@
 * **Language:** Python ≥ 3.10.  
 * **Formatting:** `black` (88‑char line length) + `ruff` for linting.  Run `black -q . && ruff --fix .` before committing.
 * **Type hints:** Mandatory for all new functions and public methods (`from __future__ import annotations`).
-* **Imports:** Standard library ⟶ third‑party ⟶ local, separated by a blank line.  No wildcard imports.
+* **Imports:** Standard library ⟶ third‑party ⟶ local, separated by a blank line.  No wildcard imports.  Protect references with sys.path to make them robust regardless of how the file is called.
 * **Logging:** Use the shared `import logging; logger = logging.getLogger(__name__)` pattern instead of bare `print`.
 * **Change scope:** When tasked with a change, prefer to create a new function or class instead of modifying existing ones.  If you must modify, ensure the change is minimal and well‑documented.
 
