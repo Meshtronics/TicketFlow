@@ -1,0 +1,15 @@
+# TicketFlow configuration (repo‑local)
+
+defaults:
+  editor_cmd: "code -r"            # fallback if $EDITOR is unset
+  ticket_dir: "tickets"            # relocate later if you want
+  id_prefix: ""                    # e.g. "PF-" would yield PF‑2025‑...
+  auto_create_github_issue: false  # new_ticket.py & UI obey this
+  auto_close_github_issue: false   # move_ticket.py & UI obey this
+  index_file: "TICKETS_INDEX.md"
+
+github:
+  # if omitted, CLI integration is skipped entirely
+  cli_binary: "gh"                 # override for gh.exe path on Windows
+  search_template: "in:title {id}" # how to locate the Issue for closing
+  issue_labels: ["ticketflow"]     # default labels for newly opened Issues

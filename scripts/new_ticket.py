@@ -19,10 +19,29 @@ import sys
 from datetime import date
 from pathlib import Path
 from textwrap import dedent
+from ticketflow.config import cfg  # type: ignore[import]
 
 ROOT = Path(__file__).resolve().parent.parent
 TICKETS_DIR = ROOT / "tickets" / "open"
 INDEX_SCRIPT = Path(__file__).with_name("build_index.py")
+
+
+def create_issue(ticket_id: str, title: str) -> None:
+    cli_binary = str(cfg("github", "cli_binary", default="gh"))
+    if shutil.which(cli_binary) is None:
+        print("GitHub CLI not found; skipping Issue creation.")
+        return
+    labels = cfg("github", "issue_labels", default=[])
+    if not isinstance(labels, list):
+        labels = []
+    cmd = [
+        cli_binary,
+        "issue", "create",
+        "--title", f"{ticket_id} {title}",
+        "--label", ",".join(labels),
+        "--body", f"See `{ticket_id}` in repo /tickets.",
+    ]
+    subprocess.run(cmd, check=False)
 
 
 def slugify(text: str) -> str:
@@ -54,8 +73,8 @@ def pick_editor() -> list[str] | None:
       • Windows     ('notepad.exe')
       • *nix        ('nano')
     """
-    env = os.getenv("EDITOR")
-    if env and shutil.which(env.split()[0]):
+    env = os.getenv("EDITOR") or cfg("defaults", "editor_cmd")
+    if isinstance(env, str) and env and shutil.which(env.split()[0]):
         return env.split()
 
     if shutil.which("code"):
@@ -86,11 +105,14 @@ def main() -> None:
     title = args.title or input("Short ticket title: ").strip()
     if not title:
         sys.exit("Aborted – empty title.")
-
+        
     TICKETS_DIR.mkdir(parents=True, exist_ok=True)
     ticket_id = next_ticket_id(date.today())
     filename = f"{ticket_id}_{slugify(title)}.md"
     path = TICKETS_DIR / filename
+
+    if args.github or cfg("defaults", "auto_create_github_issue", default=False):
+        create_issue(ticket_id, title)
 
     template = dedent(
         f"""\
