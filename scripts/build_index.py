@@ -7,6 +7,7 @@ from __future__ import annotations
 import re
 from datetime import datetime, timezone
 from pathlib import Path
+from ticketflow.core import parse_md_ticket
 
 ROOT = Path(__file__).resolve().parent.parent
 OPEN_DIR = ROOT / "tickets" / "open"
@@ -41,7 +42,7 @@ def parse_title(md_file: Path) -> tuple[str, str]:
 def main() -> None:
     rows: list[str] = []
     for md in sorted(OPEN_DIR.glob("*.md")):
-        ticket_id, title = parse_title(md)
+        ticket_id, title = parse_md_ticket(md)
         rows.append(f"| {ticket_id} | {title} | open |")
 
     body = HEADER + "\n".join(rows) if rows else "_No open tickets_"
