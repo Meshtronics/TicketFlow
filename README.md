@@ -87,27 +87,31 @@ Edit `.github/workflows/sync_issues.yml` in your project; keep or delete as you 
 🗂️ Folder map
 --------------
 
-```template/
- ├─ tickets/               # Copied verbatim to every project
- │   ├─ open/
- │   └─ archive/
- ├─ scripts/
- │   ├─ new_ticket.py      # create
- │   ├─ move_ticket.py     # close/archive
- │   └─ build_index.py     # (re)generate backlog index
- └─ .github/
-     └─ workflows/
-         └─ sync_issues.yml    # plug‑and‑play action reference
-ui/
- └─ streamlit_app.py        # evolving dashboard (read‑only MVP)
-action/
- ├─ Dockerfile              # builds meshtronics/ticketflow Action
- └─ entrypoint.sh
-.github/
- ├─ workflows/release.yml   # publishes the Action on tag
- └─ copilot-instructions.md # house coding rules (edit freely)
-docs/
- └─ TEMPLATE_GUIDE.md       # deeper integration notes
+```
+template/
+(ticketflow template repo root)
+├─ .ticketflow.yml              ← default config copied downstream
+├─ tickets/                     ← example open/archive folders
+│   └─ open/0000-00-00-000_example.md
+├─ scripts/                     ← helper scripts users will run
+│   ├─ new_ticket.py
+│   ├─ move_ticket.py
+│   └─ build_index.py
+├─ ticketflow/                  ← Python package for shared code & UI
+│   ├─ __init__.py
+│   ├─ __main__.py              ← so `python -m ticketflow ui` works
+│   ├─ config.py                ← YAML loader (used by scripts & UI)
+│   └─ ui/
+│       └─ main.py              ← Streamlit app
+├─ .github/
+│   └─ workflows/
+│       └─ sync_issues.yml      ← copied downstream; calls reusable Action
+├─ action/                      ← Dockerfile + entrypoint for Action
+│   ├─ Dockerfile
+│   └─ entrypoint.sh
+├─ README.md
+└─ LICENSE
+
  ```
 
 * * * * *
