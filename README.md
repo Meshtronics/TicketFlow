@@ -73,8 +73,8 @@ git push
 
 ### 3  (Optional) open the browser UI
 
-```pip install streamlit pydantic            # once per machine
-ticketflow gui                            # or: python -m ticketflow.ui.streamlit_app
+```bash
+streamlit run src/ui/streamlit_app.py
 ```
 
 ### 4  (Optional) mirror with GitHub Issues

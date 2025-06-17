@@ -4,6 +4,9 @@
 # If an earlier rule accidentally ignores /tickets or its contents,
 # these two negations override it:
 
+.venv/
+.vscode/
+
 !tickets/
 !tickets/**
 

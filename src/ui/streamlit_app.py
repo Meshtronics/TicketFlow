@@ -1,15 +1,13 @@
 import sys
 from pathlib import Path
-
-# Ensure the project root is in sys.path
-project_root = Path(__file__).resolve().parent.parent.parent
-if str(project_root) not in sys.path:
-    sys.path.insert(0, str(project_root))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 import streamlit as st
 import logging
-from ticketflow.config import cfg
-from ticketflow.core import create_ticket, list_tickets, edit_ticket, move_ticket
+from src.config import cfg
+from src.core import create_ticket, list_tickets, edit_ticket, move_ticket
+
+project_root = Path(__file__).resolve().parents[2]
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
