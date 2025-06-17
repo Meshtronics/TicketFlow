@@ -5,7 +5,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 FIXTURES = Path(__file__).resolve().parent / "fixtures"
 
-from ticketflow.quality import score_ticket
+from src.quality import score_ticket
 
 
 def test_perfect_ticket() -> None:

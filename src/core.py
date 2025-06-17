@@ -8,8 +8,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from ticketflow.config import cfg
-from ticketflow.quality import score_ticket
+from src.config import cfg
+from src.quality import score_ticket
 
 import shutil
 import subprocess

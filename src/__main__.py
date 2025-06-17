@@ -15,13 +15,13 @@ import sys
 
 from pathlib import Path
 
-from ticketflow.core import create_ticket
-from ticketflow.quality import score_ticket
+from src.core import create_ticket
+from src.quality import score_ticket
 
 
 def _launch_streamlit() -> None:
     # Replace current process with `streamlit run -m ticketflow.ui.main`
-    cmd = ["streamlit", "run", "-m", "ticketflow.ui.main"]
+    cmd = ["streamlit", "run", "src.ui.streamlit_app"]
     try:
         os.execvp(cmd[0], cmd)  # never returns
     except FileNotFoundError:

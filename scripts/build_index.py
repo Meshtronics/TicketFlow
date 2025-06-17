@@ -12,8 +12,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from ticketflow.core import parse_md_ticket
-from ticketflow.config import cfg
+from src.core import parse_md_ticket
+from src.config import cfg
 
 logger = logging.getLogger(__name__)
 

@@ -4,7 +4,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from ticketflow.core import create_ticket, move_ticket, list_tickets, edit_ticket
+from src.core import create_ticket, move_ticket, list_tickets, edit_ticket
 
 
 def test_create_and_move(tmp_path, monkeypatch):

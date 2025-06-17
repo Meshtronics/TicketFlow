@@ -12,10 +12,8 @@ import sys
 from pathlib import Path
 from typing import Final
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
-
-from ticketflow.config import cfg
-from ticketflow.core import move_ticket
+from src.config import cfg
+from src.core import move_ticket
 
 logger = logging.getLogger(__name__)
 
