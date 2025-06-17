@@ -4,8 +4,8 @@
 # If an earlier rule accidentally ignores /tickets or its contents,
 # these two negations override it:
 
-!ticketflow/tickets/
-!ticketflow/tickets/**
+!TicketFlow/ticketflow/tickets/
+!TicketFlow/ticketflow/tickets/**
 
 # Ignore Python cache files
 __pycache__/
