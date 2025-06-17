@@ -14,10 +14,24 @@ from ticketflow.core import create_ticket, list_tickets, edit_ticket, move_ticke
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-
 def main() -> None:
     st.set_page_config(page_title="TicketFlow", layout="wide")
     st.title("📋 TicketFlow Dashboard")
+
+    # Set the Streamlit Expander to use a custom HTML template
+    st.markdown(
+        """
+        <style>
+            /* Streamlit ≥ 1.28 renders an expander as
+            <details>…<summary>…<p>Your label</p></summary>…</details> */
+            div[data-testid="stExpander"] details summary p {
+                font-size: 1.4rem;      /* 1.4 × root size ≈ 22 px */
+                font-weight: 600;        /* optional – make it bolder */
+            }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
 
     # Ensure ticket_dir is resolved relative to the project root
     ticket_dir = project_root / Path(str(cfg("defaults", "ticket_dir", default="tickets")))
@@ -28,16 +42,34 @@ def main() -> None:
         open_tickets = list_tickets("open")
         st.subheader("Open Tickets")
         for t in open_tickets:
-            with st.expander(f"{t['id']} — {t['title']} (Score: {t['score']})"):
-                st.markdown(f"<h3>{t['id']} — {t['title']} (Score: {t['score']})</h3>", unsafe_allow_html=True)
-                path = Path(t["path"])
-                text = path.read_text(encoding="utf-8")
-                if st.text_area("Edit", text, key=t['id']):
+            if int(t['score']) > 80:
+                icon = "💪"
+            elif int(t['score']) > 60:
+                icon = "👍"
+            elif int(t['score']) < 20:
+                icon = "💩"
+            else:
+                icon = "😞"          
+                
+            with st.expander(f"{t['id']} — {t['title']} (Score: {t['score']}) {icon}"):
+                col1, col2, col3 = st.columns([0.8, 0.1, 0.1])
+                with col1:
+                    st.markdown(f"<h3>{t['id']} — {t['title']} (Score: {t['score']})</h3>", unsafe_allow_html=True)
+                    path = Path(t["path"])
+                    text = path.read_text(encoding="utf-8")
+                with col2:
+                    if st.button("Save", icon=":material/save:", key=f"save-{t['id']}"):
+                        edit_ticket(t['id'], st.session_state[t['id']])
+                with col3:
+                    disabled = t["id"].startswith("0000-00-00-000")
+                    if st.button("Archive", icon=":material/archive:", key=f"arch-{t['id']}", disabled=disabled):
+                        move_ticket(t['id'], archive=True)
+                        #st.success(f"Ticket {t['id']} archived.") # hangs out weirdly
+                        st.rerun()  # refresh the page to move the ticket to the archived tab
+
+                if st.text_area("Edit", text, height=400, key=t['id']):
                     pass
-                if st.button("Save", key=f"save-{t['id']}"):
-                    edit_ticket(t['id'], st.session_state[t['id']])
-                if st.button("Archive", key=f"arch-{t['id']}"):
-                    move_ticket(t['id'], archive=True)
+
 
     with archived_tab:
         archived = list_tickets("archive")
