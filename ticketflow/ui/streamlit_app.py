@@ -18,6 +18,20 @@ def main() -> None:
     st.set_page_config(page_title="TicketFlow", layout="wide")
     st.title("📋 TicketFlow Dashboard")
 
+    # Use Streamlit session_state for messages
+    if "success_message" not in st.session_state:
+        st.session_state["success_message"] = ""
+    if "fail_message" not in st.session_state:
+        st.session_state["fail_message"] = ""
+
+    if len(st.session_state["success_message"]) > 0:
+        st.success(st.session_state["success_message"])
+        st.session_state["success_message"] = ""
+        
+    if len(st.session_state["fail_message"]) > 0:
+        st.error(st.session_state["fail_message"])
+        st.session_state["fail_message"] = ""
+
     # Set the Streamlit Expander to use a custom HTML template
     st.markdown(
         """
@@ -58,14 +72,17 @@ def main() -> None:
                     path = Path(t["path"])
                     text = path.read_text(encoding="utf-8")
                 with col2:
+                    disabled = t["id"].startswith("0000-00-00-000")
                     if st.button("Save", icon=":material/save:", key=f"save-{t['id']}"):
                         edit_ticket(t['id'], st.session_state[t['id']])
+                        st.session_state["success_message"] = f"Ticket {t['id']} saved successfully."
+                        st.rerun()  # refresh the page to show the updated ticket
                 with col3:
                     disabled = t["id"].startswith("0000-00-00-000")
                     if st.button("Archive", icon=":material/archive:", key=f"arch-{t['id']}", disabled=disabled):
                         move_ticket(t['id'], archive=True)
-                        #st.success(f"Ticket {t['id']} archived.") # hangs out weirdly
-                        st.rerun()  # refresh the page to move the ticket to the archived tab
+                        st.session_state["success_message"] = f"Ticket {t['id']} archived successfully."
+                        st.rerun()  # refresh the page to move the ticket to the archived tabab
 
                 if st.text_area("Edit", text, height=400, key=t['id']):
                     pass
