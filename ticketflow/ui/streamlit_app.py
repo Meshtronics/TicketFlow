@@ -68,7 +68,7 @@ def main() -> None:
             with st.expander(f"{t['id']} — {t['title']} (Score: {t['score']}) {icon}"):
                 col1, col2, col3 = st.columns([0.8, 0.1, 0.1])
                 with col1:
-                    st.markdown(f"<h3>{t['id']} — {t['title']} (Score: {t['score']})</h3>", unsafe_allow_html=True)
+                    #st.markdown(f"<h3>{t['id']} — {t['title']} (Score: {t['score']})</h3>", unsafe_allow_html=True)
                     path = Path(t["path"])
                     text = path.read_text(encoding="utf-8")
                 with col2:
@@ -93,7 +93,7 @@ def main() -> None:
         st.subheader("Archived Tickets")
         for t in archived:
             with st.expander(f"{t['id']} — {t['title']} (Score: {t['score']})"):
-                st.markdown(f"<h3>{t['id']} — {t['title']} (Score: {t['score']})</h3>", unsafe_allow_html=True)
+                #st.markdown(f"<h3>{t['id']} — {t['title']} (Score: {t['score']})</h3>", unsafe_allow_html=True)
                 if st.button("Restore", key=f"restore-{t['id']}"):
                     move_ticket(t['id'], archive=False)
                 st.markdown(Path(t['path']).read_text(encoding="utf-8"))
@@ -102,6 +102,8 @@ def main() -> None:
     new_title = st.sidebar.text_input("Title")
     if st.sidebar.button("Create") and new_title.strip():
         create_ticket(new_title, open_in_editor=False)
+        st.sidebar.text_input("Title", value="", placeholder="Enter ticket title")  # Clear input
+        st.session_state["success_message"] = f"Ticket '{new_title}' created successfully."
         st.rerun()
 
 
