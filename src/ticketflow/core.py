@@ -40,7 +40,7 @@ def parse_md_ticket(md_file: Path) -> Tuple[str, str]:
 
 
 # ---------- 2. Ticket‑creation engine --------------------------------------
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parents[2]
 ticket_dir = cfg("defaults", "ticket_dir", default="tickets")
 if not isinstance(ticket_dir, str):
     ticket_dir = "tickets"

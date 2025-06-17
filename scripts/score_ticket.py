@@ -8,7 +8,7 @@ from pathlib import Path
 
 from ticketflow.quality import score_ticket
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 
 def main() -> None:
