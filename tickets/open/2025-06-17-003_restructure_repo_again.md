@@ -43,40 +43,40 @@ This ticket tracks the full clean‑up so that:
 
 ## 🔨 Tasks  
 
-- [ ] **Create working branch**  
+- [x] **Create working branch**
   - `git checkout -b chore/repo-flatten`
-- [ ] **Move `tickets/` directory**  
+- [x] **Move `tickets/` directory**
   - From deepest nested path to root: `git mv <old>/tickets ./tickets`
   - Verify links inside ticket markdown still resolve.
-- [ ] **Flatten nested `ticketflow` folders**  
+- [x] **Flatten nested `ticketflow` folders**
   - Identify the two inner `ticketflow/` directories.  
   - Move their contents to appropriate root‑level folders (see above).  
   - Remove the now‑empty directories: `git rm -r <inner>/ticketflow`.
-- [ ] **Normalize application code paths**  
+- [x] **Normalize application code paths**
   - If code currently lives in `<root>/ticketflow/src/*`, move to `src/`.  
   - Update any bundler/build configs (`vite.config.ts`, `webpack.config.js`, `tsconfig.json` paths, Jest config, etc.).
-- [ ] **Adjust package‑manager scripts**  
+- [x] **Adjust package‑manager scripts**
   - Edit `package.json` and any `Makefile` or shell scripts so commands run from repo root (no `cd ticketflow` prefixes).
-- [ ] **Update imports & path aliases**  
+- [x] **Update imports & path aliases**
   - **Search & replace**  
     - `import ... from "ticketflow/...";` or `../ticketflow/...`  
   - Update `tsconfig.json` `compilerOptions.paths` if using path aliases.
-- [ ] **Revise GitHub Actions**  
+- [x] **Revise GitHub Actions**
   - Remove `working-directory:` overrides that pointed into nested folders.  
   - Confirm `checkout` step runs from root and subsequent build/test steps succeed.
-- [ ] **Remove stale artifacts**  
+- [x] **Remove stale artifacts**
   - Delete any duplicated lockfiles, config files or `.env.example` that were inside nested dirs.
-- [ ] **Rewrite root README.md**  
+- [x] **Rewrite root README.md**
   - Reflect the new structure.  
   - Clarify “one folder → one source of truth” now refers to **this repo as a component** rather than a nested sub‑folder.  
   - Fix badge paths, absolute/relative links and code block paths.
-- [ ] **Documentation sweep**  
+- [x] **Documentation sweep**
   - Update diagrams or docs in `/docs/` that embed old paths.  
   - Search markdown for “ticketflow/ticketflow” or similar.
-- [ ] **Run full QA pass**  
+- [x] **Run full QA pass**
   - `pnpm install && pnpm run lint && pnpm test` from repo root.  
   - Manual smoke test: start dev server, run a production build, execute CLI tools.
-- [ ] **Commit & PR**  
+- [x] **Commit & PR**
   - Squash commits; PR title: `chore(repo): flatten structure & remove nested ticketflow dirs`.  
   - Request review from at least one maintainer.
 
